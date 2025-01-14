@@ -7,10 +7,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  dockerHubUsername: 'bluesamuel'
-  dockerImageName: 'user-auth-api-flask-mongo'
-  dockerContainerName: 'user-auth-api-flask-mongo-c'
-  dockerTag: 'latest'
+  - group: user-auth-api-flask-mongo-vg
 
 steps:
 
