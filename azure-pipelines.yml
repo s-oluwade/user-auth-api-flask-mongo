@@ -54,12 +54,13 @@ steps:
       az container create \
         --resource-group WebAppsAndApis \
         --name user-auth-api-flask-mongo-c \
-        --image $(dockerImageName) \
+        --image $(dockerHubUsername)/$(dockerImageName) \
         --os-type Linux \
         --ports 80 \
         --ip-address public \
         --cpu 1 \
-        --memory 1.5
+        --memory 1.5 \
+        --registry-login-server docker.io 
   displayName: 'Deploy Docker Container to ACI'
 
 # # Step 4: Deploy using Docker Run
