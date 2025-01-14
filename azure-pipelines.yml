@@ -61,7 +61,8 @@ steps:
         --cpu 1 \
         --memory 1.5 \
         --registry-login-server docker.io \
-        --registry-username $(dockerHubUsername)
+        --registry-username $(dockerHubUsername) \
+        --registry-password $(dockerHubToken) 
   displayName: 'Deploy Docker Container to ACI'
 
 # # Step 4: Deploy using Docker Run
