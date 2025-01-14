@@ -54,7 +54,7 @@ steps:
       az container create \
         --resource-group WebAppsAndApis \
         --name user-auth-api-flask-mongo-c \
-        --image $(dockerHubUsername)/$(dockerImageName)/$(dockerTag) \
+        --image $(dockerHubUsername)/$(dockerImageName):$(dockerTag) \
         --os-type Linux \
         --ports 80 \
         --ip-address public \
