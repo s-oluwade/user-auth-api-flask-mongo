@@ -37,7 +37,7 @@ steps:
 - task: Docker@2
   inputs:
     command: 'buildAndPush'
-    repository: '$(dockerHubUsername)/$(dockerImageName)/$(dockerTag)'
+    repository: '$(dockerHubUsername)/$(dockerImageName)'
     Dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
     tags: |
       $(dockerTag)
@@ -54,7 +54,7 @@ steps:
       az container create \
         --resource-group WebAppsAndApis \
         --name user-auth-api-flask-mongo-c \
-        --image $(dockerHubUsername)/$(dockerImageName) \
+        --image $(dockerHubUsername)/$(dockerImageName)/$(dockerTag) \
         --os-type Linux \
         --ports 80 \
         --ip-address public \
