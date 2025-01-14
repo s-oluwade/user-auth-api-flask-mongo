@@ -37,7 +37,7 @@ steps:
 - task: Docker@2
   inputs:
     command: 'buildAndPush'
-    repository: '$(dockerHubUsername)/$(dockerImageName)'
+    repository: '$(dockerHubUsername)/$(dockerImageName)/$(dockerTag)'
     Dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
     tags: |
       $(dockerTag)
