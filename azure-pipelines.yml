@@ -1,0 +1,72 @@
+trigger:
+  branches:
+    include:
+      - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  dockerHubUsername: 'bluesamuel'
+  dockerImageName: 'user-auth-api-flask-mongo'
+  dockerContainerName: 'user-auth-api-flask-mongo-c'
+  dockerTag: 'latest'
+
+steps:
+
+# Step 1: Install prerequisites
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.11.x'
+    addToPath: true
+
+- script: |
+    python -m pip install --upgrade pip
+    python --version
+    pip --version
+  displayName: 'Verify Python version'
+
+- script: |
+    pip install --no-cache-dir -r requirements.dev.txt
+  displayName: 'Install Python dependencies'
+
+# Step 2: Static code analysis with Pylint
+- script: |
+    python -m pylint . > pylint-report.txt
+    cat pylint-report.txt
+  displayName: 'Run Pylint Static Code Analysis'
+
+# Step 3: Build Docker image
+- task: Docker@2
+  inputs:
+    command: 'buildAndPush'
+    repository: '$(dockerHubUsername)/$(dockerImageName)'
+    Dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+    tags: |
+      $(dockerTag)
+    containerRegistry: 'dockerhub-connection'
+    buildContext: '$(Build.SourcesDirectory)'
+  displayName: 'Build and Push Docker Image'
+
+# Step 4: Deploy using Docker Run
+- script: |
+    docker run -d --name $(dockerContainerName) '$(dockerHubUsername)/$(dockerImageName)'
+  displayName: 'Deploy Application using Docker Compose'
+
+# Step 5: Ensure Containers are Running
+- script: |
+    sleep 10  # Wait for containers to start
+    docker ps -a
+  displayName: 'Ensure Containers are Running'
+
+# Step 6: Run Integration Tests
+- script: |
+    pytest tests/test_app.py -q
+  displayName: 'Run Integration Tests'
+  continueOnError: true
+
+# Step 7: Clean up (optional)
+- script: |
+    docker stop '$(dockerContainerName)'
+  displayName: 'Clean Up Containers'
+

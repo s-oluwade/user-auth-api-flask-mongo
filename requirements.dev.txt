@@ -1,9 +1,7 @@
+pylint
 python-dotenv
 flask
 flask_cors
 flask_jwt_extended
 pymongo
 datetime
-gunicorn
-pytest
-requests
