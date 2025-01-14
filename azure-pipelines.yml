@@ -45,10 +45,33 @@ steps:
     buildContext: '$(Build.SourcesDirectory)'
   displayName: 'Build and Push Docker Image'
 
-# Step 4: Deploy using Docker Run
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'Pay-As-You-Go(3)(13e65171-96f6-4461-8ad3-fd780d069d91)'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az container create \
+        --resource-group WebAppsAndApis \
+        --name user-auth-api-flask-mongo-c \
+        --image $(dockerImageName) \
+        --ports 80 \
+        --ip-address public \
+        --cpu 1 \
+        --memory 1.5
+  displayName: 'Deploy Docker Container to ACI'
+
+# # Step 4: Deploy using Docker Run
+# - script: |
+#     docker run -d --name $(dockerContainerName) '$(dockerHubUsername)/$(dockerImageName)'
+#   displayName: 'Deploy Application using Docker Compose'
+
 - script: |
-    docker run -d --name $(dockerContainerName) '$(dockerHubUsername)/$(dockerImageName)'
-  displayName: 'Deploy Application using Docker Compose'
+    az container show \
+      --resource-group WebAppsAndApis \
+      --name user-auth-api-flask-mongo-c \
+      --query 'ipAddress.ip' \
+      --output tsv
 
 # Step 5: Ensure Containers are Running
 - script: |
