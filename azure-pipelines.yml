@@ -55,6 +55,7 @@ steps:
         --resource-group WebAppsAndApis \
         --name user-auth-api-flask-mongo-c \
         --image $(dockerImageName) \
+        --os-type Linux \
         --ports 80 \
         --ip-address public \
         --cpu 1 \
