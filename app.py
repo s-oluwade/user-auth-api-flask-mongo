@@ -36,8 +36,8 @@ def register():
 
     hashed_password = generate_password_hash(password)
     users_collection.insert_one({"username": username, "password": hashed_password})
-
-    return jsonify({"msg": "User registered successfully"}), 201
+    access_token = create_access_token(identity=username, expires_delta=datetime.timedelta(hours=1))
+    return jsonify({"access_token": access_token}), 201
 
 # Login route
 @app.route('/login', methods=['POST'])
